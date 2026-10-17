@@ -1,1 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="TaskFlow — a modern task and deadline manager. Prioritize work, set deadlines, and track completion." />
+  <title>TaskFlow — Master your deadlines</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✓</text></svg>" />
+  <meta property="og:image" content="https://bolt.new/static/og_default.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://bolt.new/static/og_default.png">
+</head>
+<body>
+  <!-- ===== Loading Screen ===== -->
+  <div id="loadingScreen" class="loading-screen" aria-hidden="true">
+    <div class="loading-spinner" role="status" aria-label="Loading your tasks">
+      <span class="spinner-ring"></span>
+      <span class="spinner-check">✓</span>
+    </div>
+    <p class="loading-text">Loading your tasks…</p>
+  </div>
+
+  <!-- ===== Sticky Navbar ===== -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#hero" class="nav-brand" aria-label="TaskFlow home">
+        <span class="brand-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect width="28" height="28" rx="8" fill="var(--primary-600)"/>
+            <path d="M8 14.5l3.5 3.5L20 9.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="brand-name">Task<span class="brand-accent">Flow</span></span>
+      </a>
+
+      <nav class="nav-links" id="navLinks" aria-label="Primary navigation">
+        <a href="#hero" class="nav-link" data-section="hero">Home</a>
+        <a href="#dashboard" class="nav-link" data-section="dashboard">Dashboard</a>
+        <a href="#tasks" class="nav-link" data-section="tasks">My Tasks</a>
+        <a href="#about" class="nav-link" data-section="about">About</a>
+        <button class="btn btn-primary btn-sm nav-cta" id="navAddBtn">+ New Task</button>
+      </nav>
+
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== Hero ===== -->
+    <section id="hero" class="hero">
+      <div class="hero-content">
+        <span class="hero-badge">🎯 Stay focused. Ship on time.</span>
+        <h1 class="hero-title">Master your deadlines,<br/><span class="hero-title-accent">one task at a time.</span></h1>
+        <p class="hero-subtitle">Create tasks, set deadlines, prioritize what matters, and track every completion — all in one clean, fast workspace.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary btn-lg" id="heroAddBtn">+ Create your first task</button>
+          <a href="#tasks" class="btn btn-ghost btn-lg">View my tasks →</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <span class="hero-stat-num" id="heroStatTotal">0</span>
+            <span class="hero-stat-label">Total tasks</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num" id="heroStatDone">0</span>
+            <span class="hero-stat-label">Completed</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num" id="heroStatOverdue">0</span>
+            <span class="hero-stat-label">Overdue</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hero-card hero-card-1">
+          <div class="hc-header"><span class="hc-priority high"></span> Design landing page</div>
+          <div class="hc-meta"><span>📅 Today</span><span class="hc-badge high">High</span></div>
+        </div>
+        <div class="hero-card hero-card-2">
+          <div class="hc-header"><span class="hc-priority med"></span> Review pull requests</div>
+          <div class="hc-meta"><span>📅 Tomorrow</span><span class="hc-badge med">Medium</span></div>
+        </div>
+        <div class="hero-card hero-card-3 done">
+          <div class="hc-header"><span class="hc-check">✓</span> Set up project repo</div>
+          <div class="hc-meta"><span>✅ Completed</span><span class="hc-badge done">Done</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Dashboard ===== -->
+    <section id="dashboard" class="section">
+      <div class="section-header">
+        <h2 class="section-title">Dashboard</h2>
+        <p class="section-subtitle">A snapshot of where your work stands right now.</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card stat-total">
+          <div class="stat-icon">📋</div>
+          <div class="stat-body">
+            <span class="stat-num" id="statTotal">0</span>
+            <span class="stat-label">Total Tasks</span>
+          </div>
+        </div>
+        <div class="stat-card stat-pending">
+          <div class="stat-icon">⏳</div>
+          <div class="stat-body">
+            <span class="stat-num" id="statPending">0</span>
+            <span class="stat-label">In Progress</span>
+          </div>
+        </div>
+        <div class="stat-card stat-done">
+          <div class="stat-icon">✅</div>
+          <div class="stat-body">
+            <span class="stat-num" id="statDone">0</span>
+            <span class="stat-label">Completed</span>
+          </div>
+        </div>
+        <div class="stat-card stat-overdue">
+          <div class="stat-icon">⚠️</div>
+          <div class="stat-body">
+            <span class="stat-num" id="statOverdue">0</span>
+            <span class="stat-label">Overdue</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="progress-block">
+        <div class="progress-header">
+          <span class="progress-title">Overall Completion</span>
+          <span class="progress-pct" id="progressPct">0%</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-label="Completion progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Tasks ===== -->
+    <section id="tasks" class="section">
+      <div class="section-header">
+        <h2 class="section-title">My Tasks</h2>
+        <p class="section-subtitle">Add, search, filter, sort, and complete — everything stays saved in your browser.</p>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="search-box">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+            <path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <input type="text" id="searchInput" placeholder="Search tasks by title or category…" aria-label="Search tasks" />
+        </div>
+        <button class="btn btn-primary" id="addTaskBtn">+ Add Task</button>
+      </div>
+
+      <!-- Filter tabs -->
+      <div class="filter-tabs" role="tablist" aria-label="Filter tasks by status">
+        <button class="filter-tab active" data-filter="all" role="tab" aria-selected="true">All <span class="tab-count" id="countAll">0</span></button>
+        <button class="filter-tab" data-filter="pending" role="tab" aria-selected="false">Pending <span class="tab-count" id="countPending">0</span></button>
+        <button class="filter-tab" data-filter="completed" role="tab" aria-selected="false">Completed <span class="tab-count" id="countCompleted">0</span></button>
+        <button class="filter-tab" data-filter="overdue" role="tab" aria-selected="false">Overdue <span class="tab-count" id="countOverdue">0</span></button>
+      </div>
+
+      <!-- Sort + secondary actions -->
+      <div class="sort-row">
+        <div class="sort-group">
+          <label for="sortSelect" class="sort-label">Sort by</label>
+          <select id="sortSelect" aria-label="Sort tasks">
+            <option value="dueDate">Due date (soonest first)</option>
+            <option value="priority">Priority (high to low)</option>
+            <option value="created">Recently added</option>
+            <option value="title">Title (A–Z)</option>
+          </select>
+        </div>
+        <div class="sort-group">
+          <label for="priorityFilter" class="sort-label">Priority</label>
+          <select id="priorityFilter" aria-label="Filter by priority">
+            <option value="all">All priorities</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+        <button class="btn btn-ghost btn-sm reset-btn" id="resetBtn" title="Restore the original demo tasks">↺ Reset demo data</button>
+      </div>
+
+      <!-- Task list -->
+      <div id="taskList" class="task-grid"></div>
+
+      <!-- Empty state -->
+      <div id="emptyState" class="empty-state" hidden>
+        <div class="empty-icon">📝</div>
+        <h3 class="empty-title">No tasks found</h3>
+        <p class="empty-text">Try adjusting your search or filters, or create a new task to get started.</p>
+        <button class="btn btn-primary" id="emptyAddBtn">+ Add Task</button>
+      </div>
+    </section>
+
+    <!-- ===== About ===== -->
+    <section id="about" class="section section-alt">
+      <div class="section-header">
+        <h2 class="section-title">Why TaskFlow?</h2>
+        <p class="section-subtitle">Built for people who have more to do than time to do it.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3>Smart Priorities</h3>
+          <p>Mark tasks High, Medium, or Low so you always know what to tackle next — not just what's loudest.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⏰</div>
+          <h3>Deadline Alerts</h3>
+          <p>See countdowns and overdue warnings at a glance. Never let a due date sneak up on you again.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔍</div>
+          <h3>Instant Search</h3>
+          <p>Filter by status and priority, sort by due date, and search by title — find any task in one keystroke.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💾</div>
+          <h3>Always Saved</h3>
+          <p>Your tasks live in your browser's local storage. Close the tab, come back tomorrow — everything's still there.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Progress Dashboard</h3>
+          <p>A live progress bar and stat cards show exactly how much you've shipped and what's still outstanding.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Fast & Private</h3>
+          <p>No account, no server, no tracking. Just a fast, offline-friendly tool that works the moment you open it.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <span class="brand-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 28 28" fill="none">
+            <rect width="28" height="28" rx="8" fill="var(--primary-600)"/>
+            <path d="M8 14.5l3.5 3.5L20 9.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span>TaskFlow</span>
+      </div>
+      <p class="footer-text">Master your deadlines, one task at a time.</p>
+      <p class="footer-copy">Built with HTML, CSS &amp; vanilla JavaScript · Webathon 2026</p>
+    </div>
+  </footer>
+
+  <!-- ===== Add/Edit Task Modal ===== -->
+  <div class="modal-overlay" id="taskModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Add New Task</h3>
+        <button class="modal-close" id="modalClose" aria-label="Close dialog">&times;</button>
+      </div>
+      <form id="taskForm" novalidate>
+        <input type="hidden" id="taskId" />
+        <div class="form-group">
+          <label for="taskTitle">Task title <span class="req">*</span></label>
+          <input type="text" id="taskTitle" maxlength="100" placeholder="e.g. Finish quarterly report" aria-required="true" />
+          <span class="form-error" id="errTitle" hidden></span>
+        </div>
+        <div class="form-group">
+          <label for="taskDesc">Description</label>
+          <textarea id="taskDesc" maxlength="300" rows="2" placeholder="Optional details about this task"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="taskDeadline">Deadline <span class="req">*</span></label>
+            <input type="date" id="taskDeadline" aria-required="true" />
+            <span class="form-error" id="errDeadline" hidden></span>
+          </div>
+          <div class="form-group">
+            <label for="taskPriority">Priority <span class="req">*</span></label>
+            <select id="taskPriority" aria-required="true">
+              <option value="high">🔴 High</option>
+              <option value="medium" selected>🟡 Medium</option>
+              <option value="low">🟢 Low</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="taskCategory">Category</label>
+          <select id="taskCategory">
+            <option value="Work">Work</option>
+            <option value="Personal">Personal</option>
+            <option value="Study">Study</option>
+            <option value="Health">Health</option>
+            <option value="Errands">Errands</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" id="modalCancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="modalSave">Save Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== Confirm Dialog ===== -->
+  <div class="modal-overlay" id="confirmModal" hidden>
+    <div class="modal modal-sm" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle">
+      <div class="modal-header">
+        <h3 class="modal-title" id="confirmTitle">Are you sure?</h3>
+      </div>
+      <p class="confirm-text" id="confirmText">This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="confirmCancel">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirmOk">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Toast ===== -->
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
 
